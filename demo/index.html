@@ -9,7 +9,7 @@
 </head>
 <body>
     <style>
-        #draggable1 {
+        .draggable {
             height: 100px;
             width: 150px;
             border: 1px solid black;
@@ -17,8 +17,18 @@
         }
     </style>
     <b-draggable>
-        <div id="draggable1">
-            Lorem ipsum...
+        <div class="draggable">
+            Fully draggable
+        </div>
+    </b-draggable>
+    <b-draggable axis="y">
+        <div class="draggable">
+            Vertically draggable
+        </div>
+    </b-draggable>
+    <b-draggable axis="x">
+        <div class="draggable">
+            Horizontally draggable
         </div>
     </b-draggable>
     <script type="text/javascript">

@@ -6,6 +6,18 @@
     </style>
     <script>
         ({
+            get axis() {
+                return this.hasAttribute('axis') ? this.getAttribute('axis') : null;
+            },
+
+            get verticallyConstrained() {
+                return this.axis === 'x';
+            },
+
+            get horizontallyConstrained() {
+                return this.axis === 'y';
+            },
+
             createdCallback: function() {
                 this.startListener = this.start.bind(this);
                 this.addEventListener('mousedown', this.startListener, false);
@@ -23,8 +35,8 @@
             move: function(e) {
                 var diff = this.getPositionDiff(e);
 
-                this.updatePosition('left', diff.x);
-                this.updatePosition('top', diff.y);
+                if (!this.horizontallyConstrained) this.updatePosition('left', diff.x);
+                if (!this.verticallyConstrained) this.updatePosition('top', diff.y);
 
                 this.refreshPreviousPosition(e);
             },

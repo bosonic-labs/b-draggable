@@ -1,5 +1,23 @@
 (function () {
     var BDraggablePrototype = Object.create(HTMLElement.prototype, {
+            axis: {
+                enumerable: true,
+                get: function () {
+                    return this.hasAttribute('axis') ? this.getAttribute('axis') : null;
+                }
+            },
+            verticallyConstrained: {
+                enumerable: true,
+                get: function () {
+                    return this.axis === 'x';
+                }
+            },
+            horizontallyConstrained: {
+                enumerable: true,
+                get: function () {
+                    return this.axis === 'y';
+                }
+            },
             createdCallback: {
                 enumerable: true,
                 value: function () {
@@ -22,8 +40,10 @@
                 enumerable: true,
                 value: function (e) {
                     var diff = this.getPositionDiff(e);
-                    this.updatePosition('left', diff.x);
-                    this.updatePosition('top', diff.y);
+                    if (!this.horizontallyConstrained)
+                        this.updatePosition('left', diff.x);
+                    if (!this.verticallyConstrained)
+                        this.updatePosition('top', diff.y);
                     this.refreshPreviousPosition(e);
                 }
             },
