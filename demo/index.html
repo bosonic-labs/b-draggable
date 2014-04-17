@@ -15,6 +15,9 @@
             border: 1px solid black;
             background: lightblue;
         }
+        .handle {
+            background: gray;
+        }
     </style>
     <b-draggable>
         <div class="draggable">
@@ -29,6 +32,13 @@
     <b-draggable axis="x">
         <div class="draggable">
             Horizontally draggable
+        </div>
+    </b-draggable>
+    <b-draggable handle=".handle">
+        <div class="draggable">
+            <div class="handle">
+                Handle
+            </div>
         </div>
     </b-draggable>
     <script type="text/javascript">

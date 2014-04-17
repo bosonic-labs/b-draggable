@@ -10,6 +10,10 @@
                 return this.hasAttribute('axis') ? this.getAttribute('axis') : null;
             },
 
+            get handle() {
+                return this.hasAttribute('handle') ? this.querySelector(this.getAttribute('handle')) : this;
+            },
+
             get verticallyConstrained() {
                 return this.axis === 'x';
             },
@@ -20,7 +24,11 @@
 
             createdCallback: function() {
                 this.startListener = this.start.bind(this);
-                this.addEventListener('mousedown', this.startListener, false);
+                this.handle.addEventListener('mousedown', this.startListener, false);
+            },
+
+            detachedCallback: function() {
+                this.handle.removeEventListener('mousedown', this.startListener, false);
             },
 
             start: function(e) {

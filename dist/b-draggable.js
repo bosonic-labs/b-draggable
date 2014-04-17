@@ -6,6 +6,12 @@
                     return this.hasAttribute('axis') ? this.getAttribute('axis') : null;
                 }
             },
+            handle: {
+                enumerable: true,
+                get: function () {
+                    return this.hasAttribute('handle') ? this.querySelector(this.getAttribute('handle')) : this;
+                }
+            },
             verticallyConstrained: {
                 enumerable: true,
                 get: function () {
@@ -22,7 +28,13 @@
                 enumerable: true,
                 value: function () {
                     this.startListener = this.start.bind(this);
-                    this.addEventListener('mousedown', this.startListener, false);
+                    this.handle.addEventListener('mousedown', this.startListener, false);
+                }
+            },
+            detachedCallback: {
+                enumerable: true,
+                value: function () {
+                    this.handle.removeEventListener('mousedown', this.startListener, false);
                 }
             },
             start: {

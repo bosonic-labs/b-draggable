@@ -1,6 +1,6 @@
 {
   "name": "b-draggable",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "b-draggable ========",
   "main": "Gruntfile.js",
   "scripts": {
