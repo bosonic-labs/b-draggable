@@ -1,6 +1,6 @@
 {
   "name": "b-draggable",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A Bosonic element which may be used to add draggable behavior to an element.",
   "main": "Gruntfile.js",
   "scripts": {

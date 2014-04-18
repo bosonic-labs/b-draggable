@@ -84,10 +84,6 @@
                             }
                         };
                     }
-                    var targetPositioning = window.getComputedStyle(this.target).position;
-                    if (!targetPositioning.match(/^(?:r|a|f)/)) {
-                        this.target.style.position = 'relative';
-                    }
                     this.startListener = this.start.bind(this);
                     this.handle.addEventListener('mousedown', this.startListener, false);
                 }
@@ -103,6 +99,10 @@
                 value: function (e) {
                     e.preventDefault();
                     this.refreshPreviousPosition(e);
+                    var targetPositioning = window.getComputedStyle(this.target).position;
+                    if (!targetPositioning.match(/^(?:r|a|f)/)) {
+                        this.target.style.position = 'relative';
+                    }
                     this.moveListener = this.move.bind(this);
                     this.stopListener = this.stop.bind(this);
                     document.addEventListener('mousemove', this.moveListener, false);
