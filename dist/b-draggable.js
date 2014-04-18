@@ -1,4 +1,24 @@
 (function () {
+    function getComputedDimensions(node) {
+        var c = window.getComputedStyle(node), p = function (v) {
+                return parseInt(v.replace('px', ''));
+            };
+        var width = p(c.width), height = p(c.height), mLeft = p(c.marginLeft), mRight = p(c.marginRight), mTop = p(c.marginTop), mBottom = p(c.marginBottom), pLeft = p(c.paddingLeft), pRight = p(c.paddingRight), pTop = p(c.paddingTop), pBottom = p(c.paddingBottom), bLeft = p(c.borderLeftWidth), bRight = p(c.borderRightWidth), bTop = p(c.borderTopWidth), bBottom = p(c.borderBottomWidth), offsetWidth = width + pLeft + pRight + bLeft + bRight, offsetHeight = height + pTop + pBottom + bTop + bBottom;
+        return {
+            offsetWidth: offsetWidth,
+            offsetHeight: offsetHeight,
+            borderLeftWidth: bLeft,
+            borderRightWidth: bRight,
+            borderTopWidth: bTop,
+            borderBottomWidth: bBottom,
+            paddingLeft: pLeft,
+            paddingRight: pRight,
+            paddingTop: pTop,
+            paddingBottom: pBottom,
+            outerWidth: offsetWidth + mLeft + mRight,
+            outerHeight: offsetHeight + mTop + mBottom
+        };
+    }
     var BDraggablePrototype = Object.create(HTMLElement.prototype, {
             axis: {
                 enumerable: true,
@@ -10,6 +30,15 @@
                 enumerable: true,
                 get: function () {
                     return this.hasAttribute('handle') ? this.querySelector(this.getAttribute('handle')) : this;
+                }
+            },
+            target: {
+                enumerable: true,
+                get: function () {
+                    if (!this._target) {
+                        this._target = this.hasAttribute('target') ? this.querySelector(this.getAttribute('target')) : this;
+                    }
+                    return this._target;
                 }
             },
             verticallyConstrained: {
@@ -24,9 +53,41 @@
                     return this.axis === 'y';
                 }
             },
+            contained: {
+                enumerable: true,
+                get: function () {
+                    return this.hasAttribute('containment');
+                }
+            },
+            containment: {
+                enumerable: true,
+                get: function () {
+                    if (!this.contained)
+                        return null;
+                    var attr = this.getAttribute('containment');
+                    return attr === 'parent' ? this.parentElement : this.querySelector(attr);
+                }
+            },
             createdCallback: {
                 enumerable: true,
                 value: function () {
+                    if (this.contained) {
+                        var contain = getComputedDimensions(this.containment), target = getComputedDimensions(this.target);
+                        this.constraints = {
+                            left: {
+                                min: contain.borderLeftWidth + contain.paddingLeft,
+                                max: contain.offsetWidth - contain.borderRightWidth - contain.paddingRight - target.outerWidth
+                            },
+                            top: {
+                                min: contain.borderTopWidth + contain.paddingTop,
+                                max: contain.offsetHeight - contain.borderBottomWidth - contain.paddingBottom - target.outerHeight
+                            }
+                        };
+                    }
+                    var targetPositioning = window.getComputedStyle(this.target).position;
+                    if (!targetPositioning.match(/^(?:r|a|f)/)) {
+                        this.target.style.position = 'relative';
+                    }
                     this.startListener = this.start.bind(this);
                     this.handle.addEventListener('mousedown', this.startListener, false);
                 }
@@ -88,21 +149,23 @@
             getPosition: {
                 enumerable: true,
                 value: function (side) {
-                    var position = this.style[side];
-                    return position ? parseInt(position.replace('px', '')) : 0;
+                    var position = window.getComputedStyle(this.target)[side];
+                    return position !== 'auto' ? parseInt(position.replace('px', '')) : 0;
                 }
             },
             setPosition: {
                 enumerable: true,
                 value: function (side, value) {
-                    this.style[side] = value + 'px';
+                    this.target.style[side] = value + 'px';
                 }
             },
             updatePosition: {
                 enumerable: true,
                 value: function (side, diff) {
-                    var currentPos = this.getPosition(side);
-                    this.setPosition(side, currentPos + diff);
+                    var currentPos = this.getPosition(side), newPos = currentPos + diff;
+                    if (!this.contained || newPos >= this.constraints[side].min && newPos <= this.constraints[side].max) {
+                        this.setPosition(side, currentPos + diff);
+                    }
                 }
             }
         });

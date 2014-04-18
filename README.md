@@ -32,3 +32,4 @@ Otherwise, you can download and include in your HTML file the builded CSS & JS f
 ### Attributes
 - __handle__: a CSS selector that points to the element to be used to drag the object (defaults to the whole object).
 - __axis__: constrains the draggability along an axis (`x` or `y`).
+- __containement__: specifies an element that defines the boundaries of the draggable area: `parent` or `<selector>`.

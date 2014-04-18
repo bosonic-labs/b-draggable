@@ -15,10 +15,34 @@
             border: 1px solid black;
             background: lightblue;
         }
+        .fixed-draggable {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+        }
+        .draggable-container {
+            position: relative;
+            height: 300px;
+            width: 250px;
+            background: #ccc;
+        }
+        .draggable-container .draggable {
+            position: absolute;
+            margin: 10px;
+            top: 10px;
+            left: 20px;
+        }
         .handle {
             background: gray;
         }
     </style>
+    <div class="draggable-container">
+        <b-draggable target=".draggable" containment="parent">
+            <div class="draggable">
+                Contained
+            </div>
+        </b-draggable>
+    </div>
     <b-draggable>
         <div class="draggable">
             Fully draggable
@@ -41,6 +65,12 @@
             </div>
         </div>
     </b-draggable>
+    <b-draggable target=".fixed-draggable">
+        <div class="draggable fixed-draggable">
+            Fixed
+        </div>
+    </b-draggable>
+
     <script type="text/javascript">
         
     </script>
