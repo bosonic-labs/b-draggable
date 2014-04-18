@@ -1,5 +1,3 @@
-b-draggable
-===========
 # &lt;b-draggable&gt;
 
 A [Bosonic](http://bosonic.github.io) element which may be used to add draggable behavior to an element.
